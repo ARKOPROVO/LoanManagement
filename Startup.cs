@@ -40,7 +40,7 @@ namespace LoanManagement
                 app.UseDeveloperExceptionPage();
             }
 
-            loanDBContext.Database.EnsureCreated();
+            //loanDBContext.Database.Migrate();
 
             app.UseHttpsRedirection();
 

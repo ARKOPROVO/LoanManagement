@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using LoanManagement.Data;
+using LoanManagement.Models;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -20,9 +21,31 @@ namespace LoanManagement.Controllers
         }
         // GET: api/<LoanManagementController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<User> Get()
         {
-            return new string[] { "value1", "value2" };
+            //return new string[] { "value1", "value2" };
+            return _loanDBContext.Users;
+        }
+
+        // GET: api/<LoanManagementController>
+        [HttpGet]
+        [Route("login")]
+        public IActionResult ConfirmLogin(string userid, string password)
+        {
+            //var user = _loanDBContext.Users.Find(userid);
+            var user = _loanDBContext.Users.FirstOrDefault(p => p.UserId== userid);
+            if(user == null)
+            {
+                return NotFound("User doesn't exist");
+            }
+            else if(user.Password != password)
+            {
+                return BadRequest("password doesn't match");
+            }
+            else
+            {
+                return Ok("Successfull login");
+            }
         }
 
         // GET api/<LoanManagementController>/5
