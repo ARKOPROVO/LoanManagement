@@ -27,7 +27,7 @@ namespace LoanManagement.Controllers
             return _loanDBContext.Users;
         }
 
-        // GET: api/<LoanManagementController>
+        // GET: api/LoanManagement/login
         [HttpGet]
         [Route("login")]
         public IActionResult ConfirmLogin(string userid, string password)
@@ -44,7 +44,7 @@ namespace LoanManagement.Controllers
             }
             else
             {
-                return Ok("Successfull login");
+                return Ok(user.Role);
             }
         }
 
@@ -57,8 +57,12 @@ namespace LoanManagement.Controllers
 
         // POST api/<LoanManagementController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        [Route("addLoan")]
+        public IActionResult AddLoan([FromBody] LoanDetail loanDetail)
         {
+            _loanDBContext.LoanDetails.Add(loanDetail);
+            _loanDBContext.SaveChanges();
+            return Ok("Successful");
         }
 
         // PUT api/<LoanManagementController>/5

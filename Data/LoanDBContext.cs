@@ -14,5 +14,6 @@ namespace LoanManagement.Data
 
         }
         public DbSet<User> Users { get; set; }
+        public DbSet<LoanDetail> LoanDetails { get; set; }
     }
 }
