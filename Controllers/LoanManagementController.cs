@@ -27,6 +27,7 @@ namespace LoanManagement.Controllers
             return _loanDBContext.Users;
         }
 
+
         // GET: api/LoanManagement/login
         [HttpGet]
         [Route("login")]
@@ -48,14 +49,43 @@ namespace LoanManagement.Controllers
             }
         }
 
-        // GET api/<LoanManagementController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        // GET api/LoanManagement/searchLoan
+        [HttpGet]
+        [Route("searchLoan")]
+        public IActionResult GetSearchResult(string borrowerName,int loanId,int loanAmount )
         {
-            return "value";
+            if (loanId != 0)
+            {
+                var loan = _loanDBContext.LoanDetails.Where(p => p.LoanId == loanId);
+                if (loan != null)
+                {
+                    return Ok(loan);
+                }
+            }
+           
+                //var loans = _loanDBContext.LoanDetails.Where(p => p.LoanId == loanId || p.BorrowerName == borrowerName || p.LoanAmount == loanAmount);
+                return Ok(_loanDBContext.LoanDetails.Where(p => p.LoanId == loanId || p.BorrowerName == borrowerName || p.LoanAmount == loanAmount));
+            //if(!String.IsNullOrEmpty(borrowerName))
+            //{
+            //    loans = _loanDBContext.LoanDetails.Where(p => p.BorrowerName == borrowerName).ToList();
+            //}
+            //else if(loanId != 0)
+            //{
+            //    loans = _loanDBContext.LoanDetails.Where(p => p.LoanId == loanId).ToList();
+            //}
+            //else if(!String.IsNullOrEmpty(borrowerName) && loanId != 0)
+            //{
+            //    loans = _loanDBContext.LoanDetails.Where(p => p.LoanId == loanId || p.BorrowerName == borrowerName).ToList();
+            //}
+            //else
+            //{
+            //    loans = _loanDBContext.LoanDetails.Where(p => p.LoanAmount == loanAmount).ToList();
+            //}
+
+            //return Ok(loans);
         }
 
-        // POST api/<LoanManagementController>
+        // POST /api/LoanManagement/addLoan
         [HttpPost]
         [Route("addLoan")]
         public IActionResult AddLoan([FromBody] LoanDetail loanDetail)
@@ -65,10 +95,25 @@ namespace LoanManagement.Controllers
             return Ok("Successful");
         }
 
-        // PUT api/<LoanManagementController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        // PUT /api/LoanManagement/editLoan/{loanId}
+        [HttpPut]
+        [Route("editLoan/{loanId}")]
+        public IActionResult EditLoan(int loanId, [FromBody] LoanDetail loanDetail)
         {
+            var loan = _loanDBContext.LoanDetails.Find(loanId);
+            loan.BorrowerName = loanDetail.BorrowerName;
+            loan.LoanTerm = loanDetail.LoanTerm;
+            loan.LoanAmount = loanDetail.LoanAmount;
+            loan.LoanType = loanDetail.LoanType;
+            loan.AddressLine1 = loanDetail.AddressLine1;
+            loan.AddressLine2 = loanDetail.AddressLine2;
+            loan.City = loanDetail.City;
+            loan.ZipCode = loanDetail.ZipCode;
+            loan.LegalInformation = loanDetail.LegalInformation;
+
+            _loanDBContext.SaveChanges();
+
+            return Ok("Successful");
         }
 
         // DELETE api/<LoanManagementController>/5
